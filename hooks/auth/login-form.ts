@@ -1,3 +1,4 @@
+import { login } from '@/app/auth/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -23,7 +24,12 @@ export function useLoginForm() {
   });
 
   async function onSubmit(values: FormSchema) {
-    console.log(values);
+    const formData = new FormData();
+
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+
+    await login(formData);
   }
 
   return {

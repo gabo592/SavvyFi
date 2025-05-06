@@ -1,5 +1,6 @@
 'use client';
 
+import { useRegisterForm } from '@/hooks/auth/register-form';
 import {
   Form,
   FormControl,
@@ -11,12 +12,10 @@ import {
 } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useLoginForm } from '@/hooks/auth/login-form';
-import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 
-export function LoginForm() {
-  const { form, onSubmit } = useLoginForm();
+export function RegisterForm() {
+  const { form, onSubmit } = useRegisterForm();
 
   return (
     <Form {...form}>
@@ -24,6 +23,34 @@ export function LoginForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid items-start gap-4 w-full max-w-md"
       >
+        <FormField
+          control={form.control}
+          name="firstName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nombre</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>Ingrese su nombre.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Apellido</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>Ingrese su apellido.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -34,7 +61,7 @@ export function LoginForm() {
                 <Input type="email" {...field} />
               </FormControl>
               <FormDescription>
-                Ingrese el correo electrónico con el que creó su cuenta.
+                Ingrese el correo electrónico con el que creará su cuenta.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -50,7 +77,7 @@ export function LoginForm() {
                 <Input type="password" {...field} />
               </FormControl>
               <FormDescription>
-                Ingrese la contraseña con la que creó su cuenta.
+                Ingrese la contraseña con la que creará su cuenta.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -60,14 +87,7 @@ export function LoginForm() {
           {form.formState.isSubmitting && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
-          Iniciar sesión
-        </Button>
-        <Button
-          variant={'outline'}
-          asChild
-          disabled={form.formState.isSubmitting}
-        >
-          <Link href="/auth/register">Registrarse</Link>
+          Registrarse
         </Button>
       </form>
     </Form>
