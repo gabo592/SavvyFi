@@ -42,7 +42,11 @@ export function useRegisterForm() {
 
     toast.info('Se enviará un correo de verificación.');
 
-    await signup(formData);
+    const result = await signup(formData);
+
+    if (!result.success) {
+      toast.error(result.error);
+    }
   }
 
   return {

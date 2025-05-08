@@ -1,6 +1,7 @@
 import { login } from '@/app/auth/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export function useLoginForm() {
@@ -29,7 +30,11 @@ export function useLoginForm() {
     formData.append('email', values.email);
     formData.append('password', values.password);
 
-    await login(formData);
+    const result = await login(formData);
+
+    if (!result.success) {
+      toast.error(result.error);
+    }
   }
 
   return {
