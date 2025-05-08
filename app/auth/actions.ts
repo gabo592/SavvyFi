@@ -4,8 +4,10 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/utils/supabase/server';
+import { Result } from '@/types/result';
+import { Errors } from '@/constants/errors';
 
-export async function login(formData: FormData) {
+export async function login(formData: FormData): Promise<Result<null>> {
   const supabase = await createClient();
 
   const data = {
@@ -16,15 +18,19 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    console.error(error);
-    redirect('/error');
+    console.error(`Error ${error.code}: ${error.message}`);
+    return {
+      success: false,
+      error: Errors[error.code as keyof typeof Errors] || Errors.unknown,
+      data: null,
+    };
   }
 
   revalidatePath('/', 'layout');
   redirect('/');
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData): Promise<Result<null>> {
   const supabase = await createClient();
 
   const data = {
@@ -41,22 +47,30 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    console.error(error);
-    redirect('/error');
+    console.error(`Error ${error.code}: ${error.message}`);
+    return {
+      success: false,
+      error: Errors[error.code as keyof typeof Errors] || Errors.unknown,
+      data: null,
+    };
   }
 
   revalidatePath('/', 'layout');
   redirect('/');
 }
 
-export async function logout() {
+export async function logout(): Promise<Result<null>> {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    console.error(error);
-    redirect('/error');
+    console.error(`Error ${error.code}: ${error.message}`);
+    return {
+      success: false,
+      error: Errors[error.code as keyof typeof Errors] || Errors.unknown,
+      data: null,
+    };
   }
 
   revalidatePath('/', 'layout');
